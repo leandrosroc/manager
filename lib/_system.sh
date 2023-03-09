@@ -17,6 +17,7 @@ system_create_user() {
   sudo su - root <<EOF
   useradd -m -p $(openssl passwd -1 ${mysql_root_password}) -s /bin/bash -G sudo deploy
   usermod -aG sudo deploy
+  mv "${PROJECT_ROOT}"/deploy.zip /home/deploy/
 EOF
 
   sleep 2
@@ -36,7 +37,7 @@ system_git_clone() {
   sleep 2
 
   sudo su - deploy <<EOF
-  git clone https://github.com/leandrosroc/chat /home/deploy/${instancia_add}/
+  unzip deploy.zip -d /home/deploy/${instancia_add}/
 EOF
 
   sleep 2
@@ -51,6 +52,12 @@ system_update() {
   print_banner
   printf "${WHITE} 💻 Fazendo atualizações no sistema...${GRAY_LIGHT}"
   printf "\n\n"
+
+  sleep 2
+
+  sudo su - root <<EOF
+  apt install -y install unzip
+EOF
 
   sleep 2
 
